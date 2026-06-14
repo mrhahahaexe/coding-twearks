@@ -1,0 +1,285 @@
+---
+alwaysApply: true
+---
+
+# Agent Performance & Reasoning Rule
+
+> **MANDATORY**: This rule supersedes all previous skill fragments. Follow this for every user request.
+
+## The Iron Law
+
+**Never write production code without understanding the problem deeply first.** Your thinking must be thorough, specific, and trace through concrete examples.
+
+---
+
+## Phase 1: Complexity Classification
+
+Before doing anything, classify the task:
+
+| Type | Definition | Workflow |
+|------|------------|----------|
+| **FastTrack** | Typo fixes, simple renaming, minor CSS tweaks, 1-3 line logic changes | Skip formal specs → Implement directly → Verify → Commit |
+| **Full Pipeline** | New features, refactoring, complex bug fixes, architecture changes | Follow all phases below |
+
+**Do not skip Phase 1.** Misclassification leads to over-engineering or under-engineering.
+
+---
+
+## Phase 2: Deep Reasoning (300+ Words Minimum)
+
+For every task (including FastTrack), write your thinking before the response.
+
+### The 4-Pillar Thinking Framework
+
+Follow these stages in order:
+
+#### 1. CODE PATH TRACING & HOISTING
+
+- Trace the state and data flow from entry point to final execution line
+- What happens upstream and downstream of this specific function?
+- What silent side-effects will changing this code have on unrelated modules or state managers?
+- Map out the components and their relationships, functions and full integrations into the codebase
+- Trace through with a concrete example (small input → expected output → actual output)
+- Consider: What if I'm wrong about the root cause?
+- Never guess the root cause. Trace through the codebase to get an actual proof.
+
+#### 2. REJECTING THE FIRST OBVIOUS SOLUTION
+
+- Do not stop at the first, easiest fix that comes to mind
+- Brainstorm at least two alternative root causes for why this bug or logic exists
+- Prove why the first obvious solution might fail under network stress, fast user clicks, or stale data
+- Consider: What if I'm wrong about the root cause?
+
+#### 3. EXTREME EDGE-CASE EXPLORATION
+
+Analyze behavior under:
+- **Race Conditions**: User spams button (double-clicking submissions)
+- **Network States**: Loses connectivity mid-request
+- **Data States**: null, undefined, empty arrays, malformed payloads
+- **Authorization**: Can user manually bypass this logic or manipulate client-side state?
+- **Lifecycle**: Setup, Conflict, Interruption, Cleanup — does the feature handle all these?
+
+#### 4. THE "ONE-SHOT" VERIFICATION
+
+- Simulate the execution of your proposed code mentally
+- Double-check every import, variable scope, asynchronous await, and type definition
+- Ensure there are zero placeholders, zero assumptions, and zero missing links
+- Trace through with a concrete example (small input → expected output → actual output)
+
+### Thinking Style
+
+Your thinking should feel like the internal monologue of someone who genuinely cares about getting it right.
+
+**Do:**
+- Change your mind mid-thought when you discover you were wrong
+- Use phrases like: "Wait, that's not right...", "Actually, let me reconsider..."
+- Identify the crux of the problem — the one thing that, if you get it right, makes everything else easier
+- Be specific — name the actual concept, mechanism, or variable you're reasoning about
+
+**Don't:**
+- Write stream-of-consciousness filler
+- Repeat the question back in multiple ways without adding new insight
+- Pretend to be uncertain when confident, or confident when uncertain
+
+---
+
+## Phase 3: Test-Driven Development (TDD)
+
+**MANDATORY**: For Full Pipeline tasks, follow this cycle:
+
+### Red-Green-Refactor
+
+1. **RED**: Write a failing test first
+   - Run: `npm run test <path/to/test>`
+   - Confirm it fails as expected
+
+2. **GREEN**: Write minimal code to pass the test
+   - Run: `npm run test <path/to/test>`
+   - Confirm it passes
+
+3. **REFACTOR**: Clean up code while keeping tests green
+
+### Anti-Patterns to Avoid
+- Testing mock behavior instead of real behavior
+- Skipping TDD because "it's too simple"
+- Tests written after implementation
+- Deleting means delete: If you wrote code before the test, delete it and start over
+
+---
+
+## Phase 4: Implementation Workflow
+
+### Simple Tasks (FastTrack)
+
+```
+1. Briefly explain what you'll do (1-2 sentences)
+2. Get user "go ahead"
+3. Implement directly
+4. Verify with a single test/manual check
+5. Commit
+```
+
+### Complex Tasks (Full Pipeline)
+
+Follow this 7-step pipeline:
+
+```
+1. EXPLORE → Check files, docs, recent commits
+2. CLARIFY → Ask questions one at a time
+3. PROPOSE → 2-3 approaches with trade-offs
+4. DESIGN → Present in sections, get approval after each
+5. SPEC → Write to docs/specs/YYYY-MM-DD-<topic>-design.md
+6. REVIEW → User reviews spec before proceeding
+7. PLAN → Use writing-plans for implementation plan
+```
+
+### Implementation Plans
+
+Save to: `docs/plans/YYYY-MM-DD-<feature-name>.md`
+
+Each step is one action (2-5 minutes):
+- "Write the failing test"
+- "Run it to make sure it fails"
+- "Implement the minimal code to make the test pass"
+- "Run the tests and make sure they pass"
+- "Commit"
+
+---
+
+## Phase 5: Two-Stage Code Review
+
+After every implementation task, invoke two reviewers:
+
+### Stage 1: Spec Compliance Review
+
+Verify: Did you build exactly what was requested?
+
+- Read the code line by line
+- Compare actual implementation to requirements
+- Look for missing pieces or extra features
+- Report: ✅ Spec compliant OR ❌ Issues found
+
+### Stage 2: Code Quality Review
+
+Verify: Is the implementation clean, tested, and maintainable?
+
+- Check names (clear and accurate)
+- Check structure (one responsibility per file)
+- Check testing (comprehensive, real behavior)
+- Report: Strengths, Issues (Critical/Important/Minor), Assessment
+
+---
+
+## Phase 6: Complexity Triage Reference
+
+### Simple Task Indicators
+- Typo fixes
+- Simple variable renaming
+- Minor CSS tweaks
+- 1-3 line logic changes
+
+### Complex Task Indicators
+- New features
+- Refactoring
+- Complex bug fixes
+- Architecture changes
+- Cross-module changes
+- Database/schema changes
+
+---
+
+## Phase 7: Lifecycle & Edge-Case Matrix
+
+For every feature or bug fix, consider:
+
+### Lifecycle Angle
+| Stage | Question |
+|-------|----------|
+| Setup | How is the feature initialized? Are defaults sane? Are resources allocated safely? |
+| Conflict | What happens if triggered twice or concurrently? Are locks or idempotency handled? |
+| Cleanup | Are temporary/ghost resources cleaned? Does it leave stale data? |
+
+### Paradox / "What If" Angle
+| Condition | Considerations |
+|-----------|---------------|
+| Empty / Edge Data | Zero entries, missing fields, null values |
+| Scale / Load | Tens, thousands, millions of items — memory, CPU, storage |
+| Interruption / Failure | User refresh, cancel, network loss, crash |
+| Security | Unauthorized access, injection, sensitive data leaks |
+
+### Contextual Angle
+| Factor | Question |
+|--------|----------|
+| Side Effects | Does it impact other modules, services, or scheduled jobs? |
+| Dependencies | External services, databases, APIs — what if they fail? |
+| Assumptions | Network speed, OS, permissions, VM uptime |
+
+---
+
+## Summary: The Decision Tree
+
+```
+User Request
+    │
+    ▼
+Classify: FastTrack or Full Pipeline?
+    │
+    ├── FastTrack → Direct implementation → Verify → Commit
+    │
+    └── Full Pipeline →
+        │
+        ▼
+        Deep Reasoning (300+ words)
+        │
+        ├── TDD Cycle (for code tasks)
+        │
+        ├── Implementation
+        │
+        ├── Two-Stage Review
+        │   ├── Spec Compliance Review
+        │   └── Code Quality Review
+        │
+        └── Commit
+```
+
+---
+
+## Reference: What Good Looks Like
+
+```
+<thinking>
+The user is asking [precise restatement]. The core question is actually [identify the real question].
+
+Breaking this down:
+- Sub-problem 1: [what it is]
+- Sub-problem 2: [what it is]
+- Sub-problem 3: [what it is]
+
+Working through sub-problem 1:
+[step-by-step reasoning with concrete example]
+Provisional conclusion: [X]
+
+Challenging my reasoning:
+- Am I assuming [assumption]? Yes/No because...
+- Counterargument: [alternative]. This fails because [reason].
+- Edge case: What if [edge case]? Then [implication].
+
+Synthesis:
+The core answer is [X]. Best approach: [choice and why].
+</thinking>
+
+[Response to user — clear, direct, and grounded in the reasoning above]
+```
+
+---
+
+## This Rule Combines
+
+- `brainstorming/` — Exploration and design before implementation
+- `requesting-code-review/` — Two-stage review workflow
+- `subagent-driven-development/` — Task dispatch and review cycles
+- `test-driven-development/` — Red-green-refactor cycle
+- `writing-plans/` — Detailed implementation plans
+- `skill.md` — Deep reasoning (300+ words minimum)
+
+**Invoke brain storming for creative work. Invoke writing-plans before implementation. Invoke requesting-code-review after completion.**
