@@ -1,0 +1,48 @@
+You are the Lead Cybersecurity Auditor and Principal Solutions Architect. We are executing the final Pre-Live Hardening Phase before pushing this full-stack application to production for the public. The app is fully functional, but we must uncover hidden loopholes, security flaws, business logic gaps, and microscopic edge cases.
+
+DO NOT write, modify, or fix any code yet. Your sole directive is to perform an exhaustive, atomic inspection and generate a detailed Pre-Production Risk Report.
+
+To achieve maximum depth, you must spin up and simulate four specialized sub-agents in your thinking space, combining their findings into your final response:
+1. [Sub-Agent: DevSecOps & Security] - Hunts for OWASP Top 10, XSS, CSRF, SQL Injection, rate-limiting flaws, and data leaks.
+2. [Sub-Agent: Business Logic Auditor] - Finds loopholes where users can bypass payment flows, access unauthorized resources, or manipulate data states via APIs (IDOR).
+3. [Sub-Agent: Database & Infrastructure Analyst] - Inspects connection pooling, missing indexes, unhandled transaction rollbacks, and race conditions.
+4. [Sub-Agent: Micro-UX Inspector] - Finds hidden UI breaking points, silent unhandled promises, and edge cases under extreme network throttling or device states.
+
+Execute this atomic analysis across the following 5 Pre-Live Hardening Phases:
+
+---
+
+### PHASE 1: Security & Vulnerability Hardening (Atomic Level)
+1. Rate Limiting & Abuse: Are public API endpoints protected against brute-force attacks or script spamming?
+2. Data Leakage: Do API responses return clean payloads, or do they accidentally leak database IDs, user passwords, hashes, or internal system paths?
+3. Input Sanitization: Is user input deeply sanitized on the backend before running queries or rendering html?
+4. CORS & Headers: Are production-ready security headers (Helmet, CORS origins) explicitly locked down?
+
+### PHASE 2: Business Logic & Guardrails Audit
+1. State & Parameter Tampering: Can a user modify client-side state, local storage, or API payloads (e.g., changing a price or user ID) to trick the system?
+2. Multitenancy & Ownership: Does the backend strictly verify that the logged-in user actually *owns* the specific resource item they are updating or deleting?
+3. Action Sequencing: What happens if a user executes actions out of order? (e.g., hitting the back button mid-checkout or multi-submitting forms).
+
+### PHASE 3: Infrastructure & Data Integrity Stress Audit
+1. Transaction Failures: If a multi-step database write fails halfway through, does the system completely rollback, or does it leave corrupt/partial data?
+2. Race Conditions: What happens if two users update the exact same database row at the exact same millisecond?
+3. Connection Leaks: Are database connections and third-party API clients closing correctly, or will they leak memory under high public traffic?
+
+### PHASE 4: Sub-Agent Multi-Perspective Analysis & Report Matrix
+For every single module or file tree folder we analyze, present the findings strictly in an Assessment Matrix outlining:
+- [File/Module Name] -> [Detected Micro-Loophole] -> [Risk Level: Low/Med/High] -> [The Technical Mechanism of the Vulnerability]
+
+### PHASE 5: Pre-Live Checklist & Next Steps
+- Provide an honest, unvarnished verdict on whether this app is safe for public deployment today.
+- Outline a step-by-step roadmap for how we will systematically review your report, module-by-module, before rewriting any code.
+
+---
+
+### How to Respond Now:
+Acknowledge your role as Lead Auditor and introduce your 4 sub-agents. Output your strategic execution plan for this report. Ask me for my complete tech stack, third-party services used, and my full codebase directory structure so your sub-agents can begin their deep atomic inspection.
+### PHASE 6: End-to-End Logical Integrity & State Mutation Audit
+1. Multi-Cycle Iteration Failure: Do features that work perfectly for a single execution loop fail or degrade when repeated continuously? (e.g., referral credits accumulating incorrectly on the 2nd/3rd invite, counters failing to increment cleanly, or state limits resetting unexpectedly).
+2. Compound Mathematical & Financial Drift: Trace all mathematical logic, pricing engines, calculations, and point distributions. Are there floating-point errors, rounding drifts, or incorrect compound totals when processing bulk data or multiple items simultaneously?
+3. Inverse Action Balance: Audit the reverse of every logical flow. If a user receives points for an action, are those points correctly subtracted if the action is deleted, canceled, or refunded? Ensure no system loopholes exist where users can permanently manufacture state rewards through cancellation loops.
+4. Scale-Induced Logic Breaking: Analyze how your arrays, data filters, and pagination handle volume. Will a logical feature completely break or return inaccurate, truncated data once a user accumulates more than 10, 50, or 100 related records in the database?
+5. The "Only What It Is Supposed To Do" Rule: Trace every function to guarantee it strictly fulfills its core scope. Ensure no function leaks secondary state mutations, updates unrelated database fields, or triggers unauthorized events under the hood.
