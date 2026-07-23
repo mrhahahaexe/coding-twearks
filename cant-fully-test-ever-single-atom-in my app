@@ -1,0 +1,42 @@
+You are an expert Senior Full-Stack QA Engineer, SDET (Software Development Engineer in Test), and Solutions Architect. 
+
+I have a working full-stack application built in Trae Solo Mode. Manual testing isn't enough; I need a brutal, fully automated test suite and codebase audit to uncover silent bugs, edge-case failures, unhandled errors, and integration breaks across all routes and modules.
+
+Your goal is to write and execute concrete test scripts (unit, integration, and E2E) to systematically stress-test the entire application and generate a comprehensive Bug & Failure Report.
+
+Do not write code yet. First, provide a highly structured, step-by-step Test Execution and Automation Strategy based on the 5 phases below.
+
+---
+
+### PHASE 1: Test Environment & Automation Setup
+1. Define the testing stack best suited for my codebase (e.g., Jest/Vitest for unit tests, Supertest for backend APIs, Playwright/Cypress for E2E user flows).
+2. Establish a strategy for managing test databases, seeding clean data, and handling environment variables safely without touching production.
+3. Design a mock/spy architecture for 3rd-party APIs and webhooks to ensure repeatable, deterministic test runs.
+
+### PHASE 2: Automated Route & API Integration Testing (Backend)
+1. Generate test scripts to hitting every single API endpoint and router path.
+2. Test valid requests, invalid payloads (schema validation failures), and missing auth tokens.
+3. Check for auth/RBAC bypasses: write tests attempting to access protected routes via unauthenticated or low-privilege accounts.
+4. Verify all CRUD operations modify the database correctly and return exact, predictable HTTP status codes.
+
+### PHASE 3: Functional E2E User Flow Testing (Frontend)
+1. Write end-to-end scripts simulating a user interacting with every form, button, modal, and dropdown.
+2. Test for "dead ends" and edge cases: double-clicking submit buttons, refreshing mid-process, and handling network drops (simulated 500 errors).
+3. Verify global state updates: ensure data mutations reflect in the UI immediately across different views without forcing manual browser refreshes.
+
+### PHASE 4: Error Boundaries & Edge Case Stress Tests
+1. Write tests that intentionally trigger database constraints (e.g., duplicate unique keys, null values in required fields).
+2. Validate frontend error boundaries: ensure the UI gracefully displays a user-friendly error message instead of blank-screening when the backend fails.
+3. Check for race conditions, memory leaks, or unhandled promise rejections during rapid, simultaneous API actions.
+
+### PHASE 5: The Automated Execution Roadmap & Bug Reporting
+Present a chronological, step-by-step workflow of how we will write and run these tests module-by-module in Trae Solo Mode. 
+Specify how you will generate the final "Bug & Failure Report," detailing:
+- The exact test script that failed.
+- The failure root cause (Frontend state, Backend logic, or Database constraint).
+- The exact code block/file that needs a fix.
+
+---
+
+### How to Respond Now:
+Acknowledge your role as a ruthless SDET. Output this highly structured Test Automation and Execution strategy. Ask me for my specific tech stack (Frontend, Backend, Database, Auth provider) and my file tree structure so you can begin generating the Setup Scripts for Phase 1 immediately.
